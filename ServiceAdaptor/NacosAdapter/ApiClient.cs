@@ -1,6 +1,9 @@
 ﻿using Consul;
+using Nacos.V2;
+using Nacos.V2.Naming.Dtos;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ServiceAdapter.Common;
 using ServiceAdaptor;
 using System;
 using System.Collections;
@@ -13,63 +16,54 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace ServiceAdapter.ConsulAdapter
+namespace ServiceAdapter.NacosAdapter
 {
     public class ApiClient : IApiClient
     {
-        private static int iIndex = 0;//暂不考虑线程安全
-
-        /// <summary>
-        ///  http://127.0.0.1:8500
-        /// </summary>
-        private string ConsulAddress;
-
-        public ApiClient(string ConsulAddress)
+        private int iIndex = 0;//暂不考虑线程安全
+                               // public static ApiClient Instance { get; internal set; }
+        private readonly INacosNamingService _svc;
+        public ApiClient(INacosNamingService svc)
         {
-            this.ConsulAddress = ConsulAddress;
+            _svc = svc;
         }
-
-
 
 
         #region FindServiceByServiceName
 
-        private async Task<CatalogService> FindServiceByServiceNameAsync(string serviceName)
+        private async Task<Instance> FindServiceByServiceNameAsync(string serviceName)
         {
-            using (var consulClient = new ConsulClient(a => a.Address = new Uri(ConsulAddress)))
+            var lstInstance = await _svc.GetAllInstances(serviceName);
+            if (lstInstance != null && lstInstance.Any())
             {
-                var services = (await consulClient.Catalog.Service(serviceName)).Response;
-                if (services != null && services.Any())
-                {
-                    //// 模拟随机一台进行请求，这里只是测试，可以选择合适的负载均衡工具或框架
-                    //Random r = new Random();
-                    //int index = r.Next(services.Count());
-                    //var service = services.ElementAt(index);
-                    //return service;
+                //// 模拟随机一台进行请求，这里只是测试，可以选择合适的负载均衡工具或框架
+                //Random r = new Random();
+                //int index = r.Next(lstInstance.Count());
+                //var service = lstInstance.ElementAt(index);
+                //return service;
 
-                    ////权重：每个实例能力不同，承担的压力也要不同
-                    List<CatalogService> pairsList = new List<CatalogService>();
-                    foreach (var pair in services.ToArray())
+                ////权重：每个实例能力不同，承担的压力也要不同
+                List<Instance> pairsList = new List<Instance>();
+                foreach (var pair in lstInstance.ToArray())
+                {
+                    int count = (int)Math.Round(pair.Weight, 0);//1 5 10
+                    if (count <= 0)
                     {
-                        int count = int.Parse(pair.ServiceTags?[0]);//1 5 10
-                        if (count <= 0)
-                        {
-                            count = 1;
-                        }
-                        for (int i = 0; i < count; i++)
-                        {
-                            pairsList.Add(pair);
-                        }
+                        count = 1;
                     }
-                    //16个
-                    int index = new Random(iIndex++).Next(0, pairsList.Count());
-                    var service = pairsList[index];
-                    Console.WriteLine("index:" + index);
-                    Console.WriteLine(JsonConvert.SerializeObject(pairsList));
-                    return service;
+                    for (int i = 0; i < count; i++)
+                    {
+                        pairsList.Add(pair);
+                    }
                 }
-                return null;
+                //16个
+                int index = new Random(iIndex++).Next(0, pairsList.Count());
+                var service = pairsList[index];
+                //Console.WriteLine(JsonConvert.SerializeObject(pairsList));
+                return service;
             }
+
+            return null;
         }
         #endregion
 
@@ -95,7 +89,7 @@ namespace ServiceAdapter.ConsulAdapter
                 return new ApiResponse<ReturnType> { StatusCode = (int)HttpStatusCode.NotFound };
             }
 
-            req.url = $"http://{serviceInfo.ServiceAddress}:{serviceInfo.ServicePort}{req.url.Replace("/" + serviceName, "")}";
+            req.url = $"http://{serviceInfo.Ip}:{serviceInfo.Port}{req.url.Replace("/" + serviceName, "")}";
             return null;
         }
 
@@ -125,7 +119,7 @@ namespace ServiceAdapter.ConsulAdapter
 
             var httpClient = new HttpClient();
             string text = req.url;
-            if (req.arg != null)
+            if (req.arg != null && req.httpMethod == "GET")
             {
                 text = UrlAddParams(text, req.arg);
             }

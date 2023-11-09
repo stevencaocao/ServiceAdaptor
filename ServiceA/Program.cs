@@ -1,5 +1,4 @@
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using ServiceAdapter.ConsulAdapter;
+using ServiceAdapter;
 using ServiceAdapter.Logger;
 using ServiceAdapter.Logger.Models;
 
@@ -20,7 +19,7 @@ builder.Logging.AddLocalFileLogger(builder.Configuration.GetSection("LocalLog").
 
 #region Consul Register
 
-builder.WebHost.UseServiceAdaptor(builder.Configuration.GetSection("consul").Get<ConsulConfig>());
+builder.WebHost.UseServiceAdaptor(builder.Configuration);
 
 #endregion
 

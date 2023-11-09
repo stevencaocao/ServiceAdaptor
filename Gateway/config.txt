@@ -1,4 +1,4 @@
-{
+﻿{
   "Logging": {
     "LogLevel": {
       "Default": "Information",
@@ -8,13 +8,41 @@
   "AllowedHosts": "*",
   //保存配置文件到consul服务器
   "SaveConsulConfig": 0,
-  "Routes": [],
-  "Aggregates": [],
-  "DynamicRoutes": [
-    //限流配置
+  "Routes": [
+    /////---------------以下配置是手动路由到下游服务的配置，不配置为动态路由，自动从consul中根据服务名称匹配
     //{
-    //  "ServiceName": "ServiceB",
-    //  "RateLimitRule": {
+    //  //上游也就是用户输入的请求Url模板
+    //  "UpstreamPathTemplate": "/{url}",
+    //  //上游请求http方法，可使用数组
+    //  "UpstreamHttpMethod": [ "Get", "Post" ],
+    //  //下游服务转发地址模板
+    //  "DownstreamPathTemplate": "/{url}",
+    //  //下游服务http schema
+    //  "DownstreamScheme": "http",
+    //  //下游服务名称
+    //  "ServiceName": "DevOps",
+    //  //下游服务地址端口，用consul自动发现，则无需配置
+    //  //"DownstreamHostAndPorts": [
+    //  //  {
+    //  //    "Host": "127.0.0.1",
+    //  //    "Port": 5228
+    //  //  }
+    //  //],
+    //  "UseServiceDiscovery": true,
+    //  //负载均衡策略
+    //  //- LeastConnection – 将请求发往最空闲的那个服务器
+    //  //- RoundRobin – 轮流发送
+    //  //- NoLoadBalance – 总是发往第一个请求或者是服务发现
+    //  "LoadBalancerOptions": {
+    //    "Type": "RoundRobin"
+    //  },
+    //  ////网关缓存--不支持动态路由及全局设置
+    //  //"FileCacheOptions": {
+    //  //  "TtlSeconds": 10,
+    //  //  "Region": "UserCache"
+    //  //},
+    //  //限流
+    //  "RateLimitOptions": {
     //    //白名单，不限流的IP名单
     //    "ClientWhitelist": [],
     //    //是否启用限流
@@ -25,8 +53,35 @@
     //    "PeriodTimespan": 5,
     //    //在统计时间段内允许的最大请求数量
     //    "Limit": 1
+    //  },
+    //  "QoSOptions": {
+    //    //允许多少个异常请求，超过次数之后请求在熔断时间内不会到达服务器，直接返回错误
+    //    "ExceptionsAllowedBeforeBreaking": 3,
+    //    //熔断的时间，单位为秒
+    //    "DurationOfBreak": 60000,
+    //    //如果下游请求的处理时间超过多少则自动将请求设置为超时，返回503错误
+    //    "TimeoutValue": 3000
     //  }
     //}
+  ],
+  "Aggregates": [],
+  "DynamicRoutes": [
+    //限流配置
+    {
+      "ServiceName": "ServiceB",
+      "RateLimitRule": {
+        //白名单，不限流的IP名单
+        "ClientWhitelist": [],
+        //是否启用限流
+        "EnableRateLimiting": true,
+        //统计时间段：1s, 5m, 1h, 1d
+        "Period": "1s",
+        //多少秒之后客户端可以重试
+        "PeriodTimespan": 5,
+        //在统计时间段内允许的最大请求数量
+        "Limit": 1
+      }
+    }
   ],
   //nacos服务中心配置
   "nacos": {
@@ -84,7 +139,7 @@
       //熔断的时间，单位为秒
       "DurationOfBreak": 60000,
       //如果下游请求的处理时间超过多少则自动将请求设置为超时，返回503错误
-      "TimeoutValue": 5000
+      "TimeoutValue": 3000
     } //,
     // //httphandler相关配置
     //"HttpHandlerOptions": {

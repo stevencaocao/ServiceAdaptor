@@ -1,4 +1,7 @@
-using ServiceAdapter.ConsulAdapter;
+using Nacos.V2.Naming.Dtos;
+using Nacos.V2.Naming;
+using Nacos.V2;
+using ServiceAdapter;
 using ServiceAdapter.Logger;
 using ServiceAdapter.Logger.Models;
 
@@ -19,7 +22,7 @@ builder.Logging.AddLocalFileLogger(builder.Configuration.GetSection("LocalLog").
 
 #region Consul Register
 
-builder.WebHost.UseServiceAdaptor(builder.Configuration.GetSection("consul").Get<ConsulConfig>());
+builder.WebHost.UseServiceAdaptor(builder.Configuration);
 
 #endregion
 
