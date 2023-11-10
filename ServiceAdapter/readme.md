@@ -79,3 +79,28 @@ builder.WebHost.UseServiceAdaptor(builder.Configuration);
  }
 ```
 
+服务之间调用示例
+
+```c#
+#region Get
+
+public static async Task<string> GetTestServiceByServiceB()
+{
+    return await ApiClient.RequestApiAsync<string>("/ServiceB/api/Test/index2", null, ApiClient.Get);
+}
+
+#endregion
+
+
+
+#region Post
+
+public static async Task<UserInfo> PostTestServiceByServiceB(UserInfo userInfo)
+{
+    UserInfo userInfo= UserInfo() { name = "张三", age = 18, roles = new List<string>(),remark="" }
+    return await ApiClient.RequestApiAsync<UserInfo>("/ServiceB/api/Test/index3", userInfo, ApiClient.Post);
+}
+
+#endregion
+```
+

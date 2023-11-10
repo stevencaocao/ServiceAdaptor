@@ -2,10 +2,11 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<Authors>$(Authors)</Authors>
+		<Authors>steven</Authors>
 		<PackageProjectUrl>https://github.com/stevencaocao/ServiceAdaptor</PackageProjectUrl>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<Description>适用于.netcore的微服务适配器，支持nacos，consul注册中心的适配</Description>
+		<Version>1.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
