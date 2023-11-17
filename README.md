@@ -33,23 +33,24 @@ ServiceAdaptor集成了如下功能：
 
 1、创建.netcore项目，nuget上添加ServiceAdapter包
 
-2、Program中添加如下代码
+## 2.1 注册微服务和本地日志
+
+Program中添加如下代码
 
 ```c#
 #region localLogger Register
 //添加本地日志文件
 builder.Logging.AddLocalFileLogger(builder.Configuration.GetSection("LocalLog").Get<LoggerSetting>());
-
 #endregion
 
 #region Consul Register
 //注册到注册中心
 builder.WebHost.UseServiceAdaptor(builder.Configuration);
-
 #endregion
+
 ```
 
-3、服务配置文件样例
+服务配置文件样例
 
 ```json
  //本地日志
@@ -101,7 +102,7 @@ builder.WebHost.UseServiceAdaptor(builder.Configuration);
  }
 ```
 
-4、服务之间调用示例
+## 2.2 服务之间调用示例
 
 ```c#
 #region Get
@@ -124,5 +125,94 @@ public static async Task<UserInfo> PostTestServiceByServiceB(UserInfo userInfo)
 }
 
 #endregion
+```
+
+## 2.3 使用jwt鉴权
+
+Program中添加如下代码
+
+```c#
+#region 支持jwt鉴权
+//开启jwt鉴权
+builder.WebHost.UseJwtToken(builder.Configuration);
+#endregion
+
+#region 开启jwt验证中间件
+app.UseAuthentication();
+#endregion
+```
+
+配置文件
+
+```json
+  "JWT": {
+    /*签名算法，RsaSha256或者HmacSha256*/
+    "AlgorithmsType": "RsaSha256",
+    /*缓冲时间*/
+    "ClockSkew": 0,
+    /*私钥，签名算法时Hmac时，授权和鉴权方都需要，并且需要同样的key*/
+    "JwtSecurityKey": "jiuyun$RFVnhy6jiuyun$RFVnhy6",
+    /*过期时间（授权方配置，鉴权方不需要），分钟*/
+    "Expires": 10,
+    /*刷新令牌过期时间（授权方配置，鉴权方不需要），天*/
+    "Refresh_Expires": 30,
+    /*有效签发者*/
+    "ValidIssuer": "admin",
+    /*有效受众*/
+    "ValidAudience": "admin",
+    /*公钥，授权方式使用RSA签名算法时鉴权方使用，授权方不需要此配置*/
+    /*使用RSA签名算法的话，需要先运行授权服务，在程序根目录得到key.public.json，将key复制到下面配置*/
+    "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxBocVdDaSnUBTRDQsssE18PTFCeHxFgjJx55igbRcHoyXFwBXSApeagzIDHvShH6ZcpbLhKF4mFeKysmhwJeavNCCGtwQXgLt/bXR4btkqQZXmwWEVqeEStpwQjHJ42TDNtEGR54SDCDyyJBKCy7WgXLK7akkh4jryKPdz8ACN5UtgrOzTkNtgwfNlnn+MxL3TUQCyLwl0vwgkD5dVHvs1H8E/qxG6amyUYOXWGuSN0A/EYJGjWHb+PgF3VzBuGwb8hnV40G+xbOz4ce5z3fxvzM5CCpO4R1RqLjWqarH0eug8reABS2oNi4heCQ7aCVLZkzvX8rVp2oVlmJYgl45wIDAQAB"
+  }
+```
+
+控制器中调用
+
+```c#
+ private readonly IJwtTokenUtils _jwtTokenUtils;
+ public AccountController(IConfiguration configuration, IJwtTokenUtils jwtTokenUtils)
+ {
+     _jwtTokenUtils = jwtTokenUtils;
+ }
+ 
+  //生成token，去掉敏感字段信息
+ var view = _jwtTokenUtils.getToken(new { userName = "admin", userCode = "1001", roles = "用户" });
+ 
+ //刷新token
+ //var view = _jwtTokenUtils.refresh(refreshModel, user);
+```
+
+
+
+## 2.4 gateway使用https
+
+Program中添加如下代码
+
+```c#
+#region 支持https
+builder.WebHost.UseHttps(builder.Configuration, args);
+#endregion
+
+#region 开启https中间件
+if (Convert.ToString(builder.Configuration["https:Enable"]).ToLower().Trim() == "true")
+    app.UseHttpsRedirection();
+#endregion
+```
+
+配置文件
+
+```json
+  "https": {
+     //是否开启https
+    "Enable": true,
+     //默认https端口
+    "defaultPort": 443,
+    "Certificate": {
+       //证书，程序当前目录下
+      "Path": "server.pfx",
+       //证书密码
+      "Password": "123456"
+    }
+  },
 ```
 

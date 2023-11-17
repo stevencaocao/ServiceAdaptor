@@ -1,0 +1,26 @@
+{
+  /* wwwroot静态文件类型映射配置,可不指定  */
+  ".terrain": "application/vnd.quantized-mesh",
+  ".czml": "application/json",
+  ".glsl": "text/plain",
+  ".b3dm": "application/octet-stream",
+  ".pnts": "application/octet-stream",
+  ".i3dm": "application/octet-stream",
+  ".cmpt": "application/octet-stream",
+  ".gltf": "model/gltf+json",
+  ".bgltf": "model/gltf-binary",
+  ".glb": "model/gltf-binary",
+  ".json": "application/json",
+  ".geojson": "application/json",
+  ".topojson": "application/json",
+  ".woff": "application/font-woff",
+  ".woff2": "application/font-woff2",
+  ".kml": "application/vnd.google-earth.kml+xml",
+  ".kmz": "application/vnd.google-earth.kmz",
+  ".svg": "image/svg+xml",
+  ".ktx": "image/ktx",
+  ".crn": "image/crn",
+  ".mp4": "application/octet-stream",
+  ".be2x": "application/octet-stream",
+  ".wasm": "application/octet-stream"
+}

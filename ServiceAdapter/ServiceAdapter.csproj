@@ -1,27 +1,44 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFrameworks>net6.0</TargetFrameworks>
 		<Authors>steven</Authors>
 		<PackageProjectUrl>https://github.com/stevencaocao/ServiceAdaptor</PackageProjectUrl>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
-		<Description>适用于.netcore的微服务适配器，支持nacos，consul注册中心的适配</Description>
-		<Version>1.0.1</Version>
+		<Description>适用于.netcore的微服务适配器，支持nacos，consul注册中心的适配
+支持快速集成jwt的验证和生成token，支持https及证书绑定</Description>
+		<Version>1.1.0</Version>
+		<PackageReleaseNotes>1、增加jwt的快速集成
+2、增加https的快速集成
+3、调整依赖为net6</PackageReleaseNotes>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="readme.md" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="readme.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Consul" Version="1.7.14.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.1.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.34" />
 		<PackageReference Include="nacos-sdk-csharp" Version="1.3.5" />
+		<PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.12" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Update="readme.md">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer">
+	    <Version>6.0.25</Version>
+	  </PackageReference>
 	</ItemGroup>
 
 </Project>

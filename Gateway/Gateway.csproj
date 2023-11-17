@@ -7,17 +7,33 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="server.pfx" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="server.pfx">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Ocelot" Version="18.0.0" />
 		<PackageReference Include="Ocelot.Cache.CacheManager" Version="18.0.0" />
 		<PackageReference Include="Ocelot.Provider.Consul" Version="18.0.0" />
 		<PackageReference Include="Ocelot.Provider.Nacos" Version="1.3.4" />
 		<PackageReference Include="Ocelot.Provider.Polly" Version="18.0.0" />
+		<PackageReference Include="ServiceAdapter" Version="1.1.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="wwwroot\**\*">
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</None>
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Update="contentTypeMap.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

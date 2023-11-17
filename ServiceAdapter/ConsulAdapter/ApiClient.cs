@@ -94,7 +94,7 @@ namespace ServiceAdapter.ConsulAdapter
             {
                 return new ApiResponse<ReturnType> { StatusCode = (int)HttpStatusCode.NotFound };
             }
-
+            
             req.url = $"http://{serviceInfo.ServiceAddress}:{serviceInfo.ServicePort}{req.url.Replace("/" + serviceName, "")}";
             return null;
         }

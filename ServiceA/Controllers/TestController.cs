@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ServiceA.ServiceProvider;
 using ServiceA.ServiceProvider.Contract;
@@ -55,6 +56,18 @@ namespace ServiceA.Controllers
             };
 
             return t;
+        }
+
+        /// <summary>
+        /// hello
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "user")]
+        [HttpGet("hello")]
+        public Object hello()
+        {
+            // 返回成功信息，写出token
+            return new { success = true, data = "adfad", message = "hello" };
         }
     }
 }
