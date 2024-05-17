@@ -3,6 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Title>.netORM</Title>
+    <Version>1.0.0</Version>
+    <Authors>Steven</Authors>
+    <Description>MSCore是针对.net的ORM框架集成
+1、支持mysql、sqlserver、sqlite、postgresql、达梦等数据库，只需简单的配置文件即可直接使用
+2、还支持日志输出、定期清理日志等</Description>
   </PropertyGroup>
 
   <ItemGroup>
