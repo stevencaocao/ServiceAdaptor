@@ -1,7 +1,6 @@
 ﻿using Nacos.V2;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ServiceAdapter.NacosAdapter
 {

@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using ServiceAdapter.Logger.Models;
 using System;
 using System.IO;
 using System.Text;
 
-namespace ServiceAdapter.Logger
+namespace MSCore.Util.Logger
 {
     public class LocalFileLogger : ILogger
     {

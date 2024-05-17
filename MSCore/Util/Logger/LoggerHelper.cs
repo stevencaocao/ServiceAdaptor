@@ -1,13 +1,21 @@
-﻿using MSCore.Util.ConfigurationManager;
+﻿using Dm;
+using MSCore.Util.ConfigurationManager;
+using Newtonsoft.Json;
 using System;
 using System.IO;
-using System.Threading;
 
 namespace MSCore.Util.Logger
 {
     public static class LoggerHelper
     {
+        /// <summary>
+        /// 日志文件名字，全路径
+        /// </summary>
         private static string _logFileName;
+        /// <summary>
+        /// 日志文件父路径，全路径
+        /// </summary>
+        private static string _logBasePath;
 
         private static EnumLogLevel _logLevel;
 
@@ -23,37 +31,21 @@ namespace MSCore.Util.Logger
 
         //
         // 摘要:
-        //     记录日志文件日期，每天的日志单独放一个文件夹
+        //     记录日志文件日期，每小时的日志单独放一个文件
         public static string LogFileDate;
 
-        //
-        // 摘要:
-        //     日志对象
-        //private static Logger _logger;
-
-        //
-        // 摘要:
-        //     日志服务
-        //
-        // 参数:
-        //   logEanble
-        //     是否启用日志输出
-        //   logFileName:
-        //     日志文件路径
-        //
-        //   logLevel:
-        //     日志等级
         static LoggerHelper()
         {
             string logFilePath = Appsettings.json.GetStringByPath("LocalLog.LogFilePath")?.ToString();
             string level = Appsettings.json.GetStringByPath("LocalLog.LogLevel")?.ToString();
             string enable = Appsettings.json.GetStringByPath("LocalLog.Enable");
             bool logEnable = string.IsNullOrEmpty(enable) ? false : Convert.ToBoolean(enable);
-            EnumLogLevel logLevel = string.IsNullOrEmpty(level) ? EnumLogLevel.Warning : (EnumLogLevel)Enum.Parse(typeof(EnumLogLevel), level);
-            logFilePath = Appsettings.AbsPath(string.IsNullOrEmpty(logFilePath) ? Path.Combine("Log", DateTime.Now.ToString("yyyy-MM-dd") + ".txt") : Path.Combine(logFilePath, DateTime.Now.ToString("yyyy-MM-dd") + ".txt"));
+            EnumLogLevel logLevel = string.IsNullOrEmpty(level) ? EnumLogLevel.None : (EnumLogLevel)Enum.Parse(typeof(EnumLogLevel), level);
+            _logBasePath = string.IsNullOrEmpty(logFilePath) ? Appsettings.AbsPath("Logs") : Appsettings.AbsPath(logFilePath);
             singleLevelFile = Appsettings.json.GetStringByPath("LocalLog.SingleLevelFile")?.ToString() ?? "0";
 
-            _logFileName = logFilePath;
+            InitFileDirectory();
+
             _logLevel = logLevel;
             _logEnable = logEnable;
 
@@ -61,6 +53,15 @@ namespace MSCore.Util.Logger
             {
                 return;
             }
+        }
+
+        /// <summary>
+        /// 初始化日志文件夹
+        /// </summary>
+        private static void InitFileDirectory()
+        {
+            DateTime dateTime = DateTime.Now;
+            _logFileName = Path.Combine(_logBasePath, dateTime.ToString("yyyy-MM-dd"), dateTime.ToString("yyyyMMddHH") + ".log");
             LogFileDate = Path.GetFileNameWithoutExtension(_logFileName);
             if (!File.Exists(_logFileName))
             {
@@ -99,7 +100,7 @@ namespace MSCore.Util.Logger
         //     标记，日志将记录在同一个标记文件下
         public static void LogInfo(string message, string mark = "")
         {
-            Log(EnumLogLevel.Info, message, mark);
+            Log(EnumLogLevel.Information, message, mark);
         }
 
         //
@@ -142,9 +143,24 @@ namespace MSCore.Util.Logger
         //
         //   mark:
         //     标记，日志将记录在同一个标记文件下
-        public static void LogFatal(string message, string mark = "")
+        public static void LogCritical(string message, string mark = "")
         {
-            Log(EnumLogLevel.Fatal, message, mark);
+            Log(EnumLogLevel.Critical, message, mark);
+        }
+
+        //
+        // 摘要:
+        //     记录详细消息，包含敏感信息
+        //
+        // 参数:
+        //   message:
+        //     消息内容
+        //
+        //   mark:
+        //     标记，日志将记录在同一个标记文件下
+        public static void LogTrace(string message, string mark = "")
+        {
+            Log(EnumLogLevel.Trace, message, mark);
         }
 
         //
@@ -161,7 +177,17 @@ namespace MSCore.Util.Logger
         //     标记，日志将记录在同一个标记文件下
         private static void Log(EnumLogLevel logLevel, string message, string mark)
         {
-            string value = string.Format("{0} [{1}] [Thread {2}] {3}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), logLevel, Thread.CurrentThread.ManagedThreadId, message);
+            var log = new
+            {
+                CreateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:ffff"),
+                Type = "Manal",
+                Category = "",
+                Level = logLevel.ToString(),
+                Content = message
+            };
+
+            string value = JsonConvert.SerializeObject(log);
+
             Console.WriteLine(value);
             if (logLevel < _logLevel)
             {
@@ -171,14 +197,14 @@ namespace MSCore.Util.Logger
             {
                 return;
             }
-
+            InitFileDirectory();
             string text = _logFileName;
-            if (LogFileDate != DateTime.Now.ToString("yyyy-MM-dd"))
-            {
-                text = _logFileName.Replace(LogFileDate, DateTime.Now.ToString("yyyy-MM-dd") ?? "");
-                LogFileDate = DateTime.Now.ToString("yyyy-MM-dd");
-                _logFileName = text;
-            }
+            //if (LogFileDate != DateTime.Now.ToString("yyyyMMddHH"))
+            //{
+            //    text = _logFileName.Replace(LogFileDate, DateTime.Now.ToString("yyyyMMddHH") ?? "");
+            //    LogFileDate = DateTime.Now.ToString("yyyyMMddHH");
+            //    _logFileName = text;
+            //}
 
             if (!string.IsNullOrEmpty(mark))
             {
@@ -193,6 +219,7 @@ namespace MSCore.Util.Logger
             {
                 streamWriter.WriteLine(value);
             }
+            _logFileName = string.Empty;
         }
     }
 

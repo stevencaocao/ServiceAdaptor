@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ServiceAdapter.Logger.Models
+namespace MSCore.Util.Logger
 {
     public class LoggerSetting
     {
@@ -18,11 +14,11 @@ namespace ServiceAdapter.Logger.Models
         /// <summary>
         /// 日志文件路径
         /// </summary>
-        public string LogFilePath { get; set; } = Path.Combine(AppContext.BaseDirectory,"Logs");//.Replace("\\", "/")
+        public string LogFilePath { get; set; } = Path.Combine(AppContext.BaseDirectory, "Logs");//.Replace("\\", "/")
 
         /// <summary>
         /// 日志文件根据消息等级分别存储 0表示不单独存储，1表示单独存储
         /// </summary>
-        public int SingleLevelFile {  get; set; }
+        public int SingleLevelFile { get; set; }
     }
 }

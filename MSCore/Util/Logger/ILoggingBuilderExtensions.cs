@@ -1,12 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ServiceAdapter.Logger.Models;
-using ServiceAdapter.Logger.Tasks;
+using MSCore.Util.Logger.Tasks;
 using System;
 
-namespace ServiceAdapter.Logger
+namespace MSCore.Util.Logger
 {
     public static class ILoggingBuilderExtensions
     {

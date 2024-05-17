@@ -40,6 +40,8 @@ namespace ServiceA.Controllers
         {
             string msg = $"你正在调用ServiceA服务端口号为{Request.HttpContext.Connection.LocalPort}的Index方法，{DateTime.Now}";
             LoggerHelper.LogInfo(msg);
+            logger.LogInformation("new:" + msg);
+            logger.LogError(msg);
             return msg;
         }
         /// <summary>

@@ -1,37 +1,40 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using ServiceAdapter.Common;
-using ServiceAdapter.Logger.Models;
+﻿using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
+using Microsoft.Extensions.Hosting;
+using MSCore.Util.Common;
+using System.Linq;
+using MSCore.Util.ConfigurationManager;
 
-namespace ServiceAdapter.Logger.Tasks
+namespace MSCore.Util.Logger.Tasks
 {
     public class LogClearTask : BackgroundService
     {
         private readonly int saveDays;
         private readonly string filePath;
+        private readonly bool enable;
 
 
         public LogClearTask(IOptionsMonitor<LoggerSetting> config)
         {
-            saveDays = config.CurrentValue.SaveDays;
-            filePath = config.CurrentValue.LogFilePath;
+            enable=config.CurrentValue.Enable;
+            saveDays= config.CurrentValue.SaveDays;
+            filePath= config.CurrentValue.LogFilePath;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            if(!enable)
+                return;
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
 
-                    string basePath = string.IsNullOrEmpty(filePath) ? Path.Combine(AppContext.BaseDirectory, "Logs") : filePath;
+                    string basePath = string.IsNullOrEmpty(filePath) ? Path.Combine(AppContext.BaseDirectory, "Logs") : filePath;//.Replace("\\", "/")
 
                     if (Directory.Exists(basePath))
                     {
@@ -49,12 +52,10 @@ namespace ServiceAdapter.Logger.Tasks
                                 //{
                                 //    File.Delete(logPath);
                                 //}
-
                                 if (Convert.ToDateTime(logPath.Substring(logPath.Length - 10)).Date < deleteTime.Date)
                                 {
                                     Directory.Delete(logPath, true);
                                 }
-
                             }
                         }
                     }

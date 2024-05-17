@@ -4,22 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Nacos.OpenApi;
 using Nacos.V2.DependencyInjection;
 using Newtonsoft.Json;
-using ServiceAdapter.ConsulAdapter;
-using ServiceAdaptor;
 using ServiceAdapter.NacosAdapter;
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using static System.Collections.Specialized.BitVector32;
-using Google.Protobuf.WellKnownTypes;
-using Nacos.V2.Naming;
-using Nacos.V2;
-using System.Net.Http;
-using System.Net;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Configuration;
 
 namespace ServiceAdapter

@@ -1,9 +1,9 @@
-using Nacos.V2.Naming.Dtos;
-using ServiceAdapter;
 using ServiceAdapter.JwtToken;
 using MSCore.EntityFramework.Extend;
 using MSCore.EntityFramework;
 using ServiceA.BASE;
+using ServiceAdapter;
+using MSCore.Util.Logger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,13 +17,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.UseEntityFrameworkCore<DBContext>("App.Db.Project");
 
-builder.Services.AddScoped<IUnitOfWork,EFUnitOfWork>();
-
-
+builder.Services.AddScoped<IUnitOfWork, EFUnitOfWork>();
 
 #region localLogger Register
 
-//builder.Logging.AddLocalFileLogger(builder.Configuration.GetSection("LocalLog").Get<LoggerSetting>());
+builder.Logging.AddLocalFileLogger(builder.Configuration.GetSection("LocalLog").Get<LoggerSetting>());
 
 #endregion
 

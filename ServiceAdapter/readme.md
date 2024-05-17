@@ -39,7 +39,9 @@ builder.WebHost.UseServiceAdaptor(builder.Configuration);
    //日志保留天数
    "SaveDays": 30,
    //日志文件绝对路径，不设置默认放在程序主目录
-   "LogFilePath": ""
+   "LogFilePath": "",
+   //日志文件根据消息等级分别存储 0表示不单独存储，1表示单独存储
+   "SingleLevelFile": 0
  },
 
  //注册微服务consul配置
