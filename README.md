@@ -33,7 +33,7 @@ ServiceAdaptor集成了如下功能：
 
 1、创建.netcore项目，nuget上添加ServiceAdapter包
 
-## 2.1 注册微服务和本地日志
+## 3.1 注册微服务和本地日志
 
 Program中添加如下代码
 
@@ -102,7 +102,7 @@ builder.WebHost.UseServiceAdaptor(builder.Configuration);
  }
 ```
 
-## 2.2 服务之间调用示例
+## 3.2 服务之间调用示例
 
 ```c#
 #region Get
@@ -127,7 +127,7 @@ public static async Task<UserInfo> PostTestServiceByServiceB(UserInfo userInfo)
 #endregion
 ```
 
-## 2.3 使用jwt鉴权
+## 3.3 使用jwt鉴权
 
 Program中添加如下代码
 
@@ -184,7 +184,7 @@ app.UseAuthentication();
 
 
 
-## 2.4 gateway使用https
+## 3.4 gateway使用https
 
 Program中添加如下代码
 
@@ -214,5 +214,39 @@ if (Convert.ToString(builder.Configuration["https:Enable"]).ToLower().Trim() == 
       "Password": "123456"
     }
   },
+```
+
+# 4. ORM框架支持
+
+MSCore实现ORM框架entityframework的支持，集成sqlserver、mysql、sqlite、达梦、postgresql数据库驱动。
+
+1、达梦数据库驱动需要自行发布私有源依赖包DmProvider.1.1.0.20739和Microsoft.EntityFrameworkCore.Dm.3.1.0.20604
+
+2、达梦数据库安装实例时需注意设置大小写不敏感，否则需要字段命名和C#实体类命名规则一致（或者C#字段加注解指定一致名称）
+
+3、postgresql大小写敏感，需要字段命名规则和C#一致（或者C#字段加注解指定一致名称）
+
+4、使用实例在ServiceA中，使用时，在配置文件中指定数据库类型和连接字符串，如下：
+
+```C#
+"App": {
+  "Db": {
+    /* 数据库设置 */
+    "Project": {
+      /* 数据库类型，可为  dm mysql mssql sqlite pgsql */
+      /*达梦数据库需要创建实例时配置大小写不敏感，直接写sql查询时，需要拼接数据库名称，可从Appsettings中读取数据库名称*/
+      ///*连接字符串 */
+      //"type": "mssql",
+      //"ConnectionString": "Data Source=127.0.0.1,1433;Database=test;UID=sa;PWD=123456;",
+      //"type": "dm",
+      //"ConnectionString": "Server=10.10.10.59;Port=5236;UID=SYSDBA;PWD=SYSDBA001;Database=test;",
+      //"type": "mysql",
+      //"ConnectionString": "Server=10.10.10.59;Port=3306;UID=root;PWD=123456;Database=test;",
+      //"type": "sqlite",
+      //"ConnectionString": "Data Source=D:\\test.db;",
+      "type": "pgsql",
+      "ConnectionString": "server=127.0.0.1;port=5432;user id=postgres;password=123456;Database=test;"
+    }
+  }
 ```
 
