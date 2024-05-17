@@ -123,6 +123,8 @@ namespace ServiceA.Controllers
                 t.Name = "test8";
                 _repositoryHos.Insert(t);
 
+                _repositoryHos.Update(new HospitalInfo { Id = 47, TelNo = "9999" });
+
                 _repositoryHos.Delete(_dbContext.hospitals.First(v => v.Code == "bb"));
 
                 _repositoryHos.ExcuteSql("update hospital set name='test1111' where name='test2'");

@@ -150,7 +150,13 @@ namespace ServiceA.BASE
                 {
                     if (prop.GetValue(entityToUpdate, null).ToString() == "&nbsp;")
                         Context.Entry(entityToUpdate).Property(prop.Name).CurrentValue = null;
-                    if (Context.Entry(entityToUpdate).Properties.Any(v => v.Metadata.Name == prop.Name) && !Context.Entry(entityToUpdate).Property(prop.Name).Metadata.IsPrimaryKey()) //主键是不能进行修改的 否则无法进行更新;被标记为notmapped也不能更新
+                    bool isUpdateTime = true;
+                    if (prop.PropertyType == typeof(DateTime) && Convert.ToDateTime(prop.GetValue(entityToUpdate, null)) == DateTime.MinValue)
+                    {
+                        //时间类型，未修改的情况也有默认值，默认是时间最小值。此时不应修改
+                        isUpdateTime = false;
+                    }
+                    if (Context.Entry(entityToUpdate).Properties.Any(v => v.Metadata.Name == prop.Name) && !Context.Entry(entityToUpdate).Property(prop.Name).Metadata.IsPrimaryKey()&&isUpdateTime) //主键是不能进行修改的 否则无法进行更新;被标记为notmapped也不能更新
                     {
                         Context.Entry(entityToUpdate).Property(prop.Name).IsModified = true;
                     }
