@@ -1,0 +1,14 @@
+
+/Gateway/bin
+/Gateway/obj
+/.vs
+/AuthManager/bin
+/AuthManager/obj
+/MSCore/bin
+/MSCore/obj
+/ServiceA/bin
+/ServiceA/obj
+/ServiceAdapter/bin
+/ServiceAdapter/obj
+/ServiceB/bin
+/ServiceB/obj
