@@ -28,7 +28,7 @@ builder.WebHost.UseServiceAdaptor(builder.Configuration);
 #endregion
 
 #region Ö§³Öjwt¼øÈ¨
-builder.WebHost.UseMSCoreJwtToken(builder.Configuration);
+builder.WebHost.UseMSCoreJwtTokenClient(builder.Configuration);
 #endregion
 
 
