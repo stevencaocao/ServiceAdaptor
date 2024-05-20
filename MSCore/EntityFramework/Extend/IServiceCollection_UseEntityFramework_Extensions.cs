@@ -4,7 +4,7 @@ using MSCore.EntityFramework.DbContextInitor;
 using MSCore.EntityFramework.Model;
 using MSCore.Util.ConfigurationManager;
 
-namespace MSCore.EntityFramework.Extend
+namespace MSCore.EntityFramework
 {
     public static partial class IServiceCollection_UseEntityFramework_Extensions
     {
@@ -15,7 +15,7 @@ namespace MSCore.EntityFramework.Extend
         /// <typeparam name="TContext"></typeparam>
         /// <param name="data"></param>
         /// <param name="configPath">在appsettings.json中的路径，默认："App.Db"</param>
-        public static bool UseEntityFrameworkCore<TContext>(this IServiceCollection data, string configPath = "App.Db.Project") where TContext : DbContext
+        public static bool UseMSCoreEFCore<TContext>(this IServiceCollection data, string configPath = "App.Db.Project") where TContext : DbContext
         {
             var cInfo = Appsettings.json.GetByPath<ConnectionInfoPlus>(configPath ?? "App.Db.Project");
             cInfo.ConnectionKey = configPath;
@@ -35,7 +35,7 @@ namespace MSCore.EntityFramework.Extend
         /// <typeparam name="TContext"></typeparam>
         /// <param name="data"></param>
         /// <param name="info">如：{"type":"mysql","ConnectionString":"xxx"}</param>
-        public static bool UseEntityFramework<TContext>(this IServiceCollection data, ConnectionInfoPlus info) where TContext : DbContext
+        private static bool UseEntityFramework<TContext>(this IServiceCollection data, ConnectionInfoPlus info) where TContext : DbContext
         {
             if (!DbContextInitors.DbContextInitorMap.TryGetValue(info.type, out var initor) || initor == null) return false;
             initor.AddDbContext<TContext>(data, info);

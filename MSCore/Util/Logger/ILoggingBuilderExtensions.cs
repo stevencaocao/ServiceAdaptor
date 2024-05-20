@@ -13,7 +13,7 @@ namespace MSCore.Util.Logger
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="loggerSetting"></param>
-        public static void AddLocalFileLogger(this ILoggingBuilder builder, LoggerSetting loggerSetting)
+        public static void AddMSCoreLocalFileLogger(this ILoggingBuilder builder, LoggerSetting loggerSetting)
         {
             if (loggerSetting == null || !loggerSetting.Enable)
             {

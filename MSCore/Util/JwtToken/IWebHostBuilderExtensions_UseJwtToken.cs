@@ -5,16 +5,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MSCore.Util.Common;
 using Newtonsoft.Json;
-using ServiceAdapter.Common;
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.IO;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceAdapter.JwtToken
+namespace MSCore.Util.JwtToken
 {
     public static class IWebHostBuilderExtensions_UseJwtToken
     {
@@ -24,7 +23,7 @@ namespace ServiceAdapter.JwtToken
         /// <param name="builder"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public static IWebHostBuilder UseJwtToken(this IWebHostBuilder builder, IConfiguration configuration)
+        public static IWebHostBuilder UseMSCoreJwtToken(this IWebHostBuilder builder, IConfiguration configuration)
         {
             builder.ConfigureServices(delegate (IServiceCollection services)
             {
@@ -52,7 +51,9 @@ namespace ServiceAdapter.JwtToken
                 if (algorithmsType == "RsaSha256")
                 {
                     string keyDir = Directory.GetCurrentDirectory();
-                    if (RSAHelper.TryGetKeyParameters(keyDir, true, out SecurityKey securityKey) == false)
+                    bool success = false;
+                    SecurityKey securityKey = RSAHelper.TryGetKeyParameters(keyDir, true, out success);
+                    if (success == false)
                     {
                         securityKey = RSAHelper.GenerateAndSaveKey(keyDir);
                     }
@@ -76,13 +77,6 @@ namespace ServiceAdapter.JwtToken
                     };
                     options.Events = new JwtBearerEvents
                     {
-                        OnForbidden = async context =>
-                        {
-                            context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                            context.Response.ContentType = "application/json;charset=utf-8";
-                            var response = new { message = "You are forbidden from using this resource." };
-                            await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
-                        },
                         OnChallenge = async context =>
                         {
                             context.HandleResponse();

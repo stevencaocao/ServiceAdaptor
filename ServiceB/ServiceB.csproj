@@ -15,4 +15,8 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MSCore\MSCore.csproj" />
+  </ItemGroup>
+
 </Project>

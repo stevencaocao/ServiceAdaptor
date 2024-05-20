@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Builder;
+using MSCore.Util.Logger;
+using MSCore.Util.JwtToken;
 using ServiceAdapter;
-using ServiceAdapter.JwtToken;
-using ServiceAdapter.Logger;
-using ServiceAdapter.Logger.Models;
+using System.Reflection;
+using AuthManager.Contract;
+using MSCore.Util.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,13 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 #region localLogger Register
 
-builder.Logging.AddLocalFileLogger(builder.Configuration.GetSection("LocalLog").Get<LoggerSetting>());
+builder.Logging.AddMSCoreLocalFileLogger(builder.Configuration.GetSection("LocalLog").Get<LoggerSetting>());
 
 #endregion
+
+builder.WebHost.UseMSCoreSwagger<ApiVersion>(builder.Configuration, Assembly.GetExecutingAssembly().GetName().Name);
 
 #region Consul Register
 
@@ -26,7 +28,7 @@ builder.WebHost.UseServiceAdaptor(builder.Configuration);
 #endregion
 
 #region 支持jwt鉴权
-builder.WebHost.UseJwtToken(builder.Configuration);
+builder.WebHost.UseMSCoreJwtToken(builder.Configuration);
 #endregion
 
 
@@ -39,11 +41,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// 使用自定义中间件处理Forbidden响应
+app.UseMiddleware<ForbiddenMiddleware>();
+
 #region 开启jwt验证中间件
 app.UseAuthentication();
 #endregion
 
 app.UseAuthorization();
+
 
 app.MapControllers();
 

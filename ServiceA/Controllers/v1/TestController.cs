@@ -9,13 +9,14 @@ using ServiceA.ServiceProvider.Contract;
 using MSCore.Util.ConfigurationManager;
 using ServiceA.BASE;
 
-namespace ServiceA.Controllers
+namespace ServiceA.Controllers.v1
 {
     /// <summary>
     /// 健康检查
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = nameof(ApiVersion.V1))]
     public class TestController : ControllerBase
     {
         ILogger<TestController> logger;

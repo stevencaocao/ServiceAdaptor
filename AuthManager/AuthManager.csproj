@@ -4,11 +4,12 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ServiceAdapter" Version="1.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
+    <ProjectReference Include="..\MSCore\MSCore.csproj" />
+    <ProjectReference Include="..\ServiceAdapter\ServiceAdapter.csproj" />
   </ItemGroup>
 
 </Project>

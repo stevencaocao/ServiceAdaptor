@@ -2,12 +2,12 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0</TargetFrameworks>
-		<Authors>steven</Authors>
+		<Authors>Steven</Authors>
 		<PackageProjectUrl>https://github.com/stevencaocao/ServiceAdaptor</PackageProjectUrl>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<Description>适用于.netcore的微服务适配器，支持nacos，consul注册中心的适配
 支持快速集成jwt的验证和生成token，支持https及证书绑定</Description>
-		<Version>1.1.0</Version>
+		<Version>1.0.0</Version>
 		<PackageReleaseNotes>1、增加jwt的快速集成
 2、增加https的快速集成
 3、调整依赖为net6</PackageReleaseNotes>
@@ -33,11 +33,12 @@
 		<PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.12" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.2" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer">
-	    <Version>6.0.25</Version>
+	    <Version>6.0.30</Version>
 	  </PackageReference>
 	</ItemGroup>
 

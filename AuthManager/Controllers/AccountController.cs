@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 
 using AuthManager.Contract;
-using ServiceAdapter.JwtToken;
+using MSCore.Util.JwtToken;
+using System.Security.Claims;
+//using ServiceAdapter.JwtToken;
 
 namespace AuthManager.Controllers
 {
@@ -26,7 +28,7 @@ namespace AuthManager.Controllers
         [Route("Login")]
         public object Login([FromBody] LoginModel usermodel)
         {
-            var user = new { userName = "admin", passWord = "123", userCode = "1001", roles = "用户" }; //_dbContext.SYS_User.Where(d => d.userName == usermodel.UserName && d.isDel == false && d.status == 0).FirstOrDefault();
+            var user = new { userName = "admin", passWord = "123", userCode = "1001" }; //_dbContext.SYS_User.Where(d => d.userName == usermodel.UserName && d.isDel == false && d.status == 0).FirstOrDefault();
 
             if (user != null)
             {
@@ -38,7 +40,8 @@ namespace AuthManager.Controllers
                 #region 生成token
 
                 //生成token，去掉敏感字段信息
-                var view = _jwtTokenUtils.getToken(new { userName = "admin", userCode = "1001", roles = "用户" });
+                IEnumerable<Claim> claims = new[] { new Claim("role", "admin") };
+                var view = _jwtTokenUtils.getToken(new { userName = "admin", userCode = "1001" }, claims);
 
                 #endregion
                 #region 保存刷新令牌短码
@@ -114,6 +117,19 @@ namespace AuthManager.Controllers
         {
             // 返回成功信息，写出token
             return new { success = true, data = "adfad", message = "hello" };
+        }
+
+
+        /// <summary>
+        /// hello
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "admin")]
+        [HttpGet("helloadmin")]
+        public Object helloadmin()
+        {
+            // 返回成功信息，写出token
+            return new { success = true, data = "adfad11111", message = "hello11111" };
         }
 
     }

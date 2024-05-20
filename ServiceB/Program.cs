@@ -2,6 +2,7 @@ using Nacos.V2.Naming.Dtos;
 using Nacos.V2.Naming;
 using Nacos.V2;
 using ServiceAdapter;
+using ServiceAdapter.JwtToken;
 using ServiceAdapter.Logger;
 using ServiceAdapter.Logger.Models;
 

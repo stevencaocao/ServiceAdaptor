@@ -43,7 +43,8 @@ builder.WebHost.UseServiceAdaptor(builder.Configuration);
    //日志文件根据消息等级分别存储 0表示不单独存储，1表示单独存储
    "SingleLevelFile": 0
  },
-
+  "ProjectName": "ServiceA Test Api",
+  "ProjectDescription": "AAAA",
  //注册微服务consul配置
  "servicecenter": {
    "consul": {
@@ -133,7 +134,7 @@ app.UseAuthentication();
     "AlgorithmsType": "RsaSha256",
     /*缓冲时间*/
     "ClockSkew": 0,
-    /*私钥，签名算法时Hmac时，授权和鉴权方都需要，并且需要同样的key*/
+    /*私钥，签名算法是Hmac时，授权和鉴权方都需要，并且需要同样的key*/
     "JwtSecurityKey": "jiuyun$RFVnhy6jiuyun$RFVnhy6",
     /*过期时间（授权方配置，鉴权方不需要），分钟*/
     "Expires": 10,
