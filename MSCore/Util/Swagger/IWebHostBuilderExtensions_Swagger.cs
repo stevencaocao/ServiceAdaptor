@@ -5,7 +5,6 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Builder;
 
 namespace MSCore.Util.Swagger
@@ -27,6 +26,8 @@ namespace MSCore.Util.Swagger
             {
                 services.AddSwaggerGen(options =>
                 {
+                  var projectName=  configuration.GetSection("ProjectName");
+                  var projectDescription=  configuration.GetSection("ProjectDescription");
 
                     foreach (FieldInfo fileld in typeof(ApiVersion).GetFields())
                     {
@@ -35,9 +36,9 @@ namespace MSCore.Util.Swagger
                         options.SwaggerDoc(fileld.Name, new OpenApiInfo
                         {
                             Version = fileld.Name,
-                            Title = configuration.GetSection("ProjectName").Value,
-                            Description = $"{configuration.GetSection("ProjectDescription").Value}"
-                        });
+                            Title = string.IsNullOrEmpty(projectName.Value) ? xmlFileName : projectName.Value,
+                            Description = projectDescription.Value?.ToString()
+                        }) ;
 
                     }
                     xmlFileName = $"{xmlFileName}.xml";

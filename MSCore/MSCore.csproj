@@ -6,10 +6,23 @@
     <Title>.netORM</Title>
     <Version>1.0.0</Version>
     <Authors>Steven</Authors>
-    <Description>MSCore是针对.net的ORM框架集成
-1、支持mysql、sqlserver、sqlite、postgresql、达梦等数据库，只需简单的配置文件即可直接使用
-2、还支持日志输出、定期清理日志等</Description>
+    <Description>MSCore是一款.net扩展工具集，集成了如下功能：
+1、集成EntityFramework，支持mysql、sqlserver、sqlite、达梦、postgresql五种数据库，支持原生sql
+2、集成服务日志输出到本地
+3、集成定期清理日志功能
+4、集成jwt授权和鉴权支持工具
+5、自定义swagger支持版本管理</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="readme.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="readme.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DmProvider" Version="1.1.0.20739" />

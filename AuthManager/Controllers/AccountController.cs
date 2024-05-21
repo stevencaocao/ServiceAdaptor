@@ -95,7 +95,8 @@ namespace AuthManager.Controllers
             {
                 return Unauthorized(new { success = false, message = "刷新令牌已失效" });
             }
-            var view = _jwtTokenUtils.refresh(refreshModel, user);
+            IEnumerable<Claim> claims = new[] { new Claim("role", "admin") };
+            var view = _jwtTokenUtils.refresh(refreshModel, user,claims);
             ((IDictionary<string, object>)view).TryGetValue("success", out object code);
             ((IDictionary<string, object>)view).TryGetValue("data", out object data);
             if (code.ToString() == "false")
