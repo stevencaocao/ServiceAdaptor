@@ -214,10 +214,12 @@ namespace MSCore.Util.Logger
             {
                 text = _logFileName.Replace(LogFileDate, $"{LogFileDate}-{logLevel}");
             }
-
             using (StreamWriter streamWriter = new StreamWriter(text, append: true))
             {
-                streamWriter.WriteLine(value);
+                lock (streamWriter)
+                {
+                    streamWriter.WriteLine(value);
+                }
             }
             _logFileName = string.Empty;
         }

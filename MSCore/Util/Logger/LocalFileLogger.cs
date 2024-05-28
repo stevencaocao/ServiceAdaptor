@@ -88,9 +88,10 @@ namespace MSCore.Util.Logger
                         {
                             Directory.CreateDirectory(basePath);
                         }
-
-                        File.AppendAllText(logPath, logStr + Environment.NewLine, Encoding.UTF8);
-
+                        lock (this)
+                        {
+                            File.AppendAllText(logPath, logStr + Environment.NewLine, Encoding.UTF8);
+                        }
                     }
                 }
             }
