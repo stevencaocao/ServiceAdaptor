@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using AuthManager.Contract;
 using MSCore.Util.JwtToken;
 using System.Security.Claims;
+using AuthManager.ApiResult;
+using MSCore.Util.Redis;
 //using ServiceAdapter.JwtToken;
 
 namespace AuthManager.Controllers
@@ -19,6 +21,49 @@ namespace AuthManager.Controllers
             _configuration = configuration;
             _jwtTokenUtils = jwtTokenUtils;
         }
+
+
+        [HttpGet("test2")]
+        public string test2()
+        {
+            return "hello test2";
+        }
+        [HttpGet("test3")]
+        [SkipApiResult]
+        public string test3()
+        {
+            return "hello test3";
+        }
+        [HttpGet("test4")]
+        public string test4()
+        {
+            throw new FirstException("hello test4");
+        }
+        [HttpGet("test5")]
+        [SkipApiResult]
+        public string test5()
+        {
+            throw new FirstException("hello test5");
+        }
+
+
+        [HttpGet("redistest")]
+        public object RedisTest()
+        {
+            object result = null;
+            using (var redis = RedisUtil.Instance.GetRedis())
+            {
+                redis.GetDatabase(1).Set(new { name = "张三", age = 18 }, TimeSpan.FromSeconds(160), "hkey");
+                result = redis.GetDatabase(1).Get<person>("hkey");
+            }
+            return result;
+        }
+        public class person
+        {
+            public string name { get; set; }
+            public string age { get; set; }
+        }
+
         /// <summary>
         /// 登录
         /// </summary>
@@ -115,6 +160,13 @@ namespace AuthManager.Controllers
         [Authorize(Roles = "user")]
         [HttpGet("hello")]
         public Object hello()
+        {
+            // 返回成功信息，写出token
+            return new { success = true, data = "adfad", message = "hello" };
+        }
+
+        [HttpGet("test")]
+        public Object test()
         {
             // 返回成功信息，写出token
             return new { success = true, data = "adfad", message = "hello" };

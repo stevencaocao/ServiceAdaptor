@@ -4,12 +4,18 @@ using ServiceAdapter;
 using System.Reflection;
 using AuthManager.Contract;
 using MSCore.Util.Swagger;
+using AuthManager.ApiResult;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddControllers(v =>
+{
+    v.Filters.Add<ApiResultFilter>();
+    v.Filters.Add<ApiExceptionFilter>();
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 

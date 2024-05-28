@@ -8,6 +8,7 @@ using ServiceA.ServiceProvider;
 using ServiceA.ServiceProvider.Contract;
 using MSCore.Util.ConfigurationManager;
 using ServiceA.BASE;
+using MSCore.Util.Redis;
 
 namespace ServiceA.Controllers.v1
 {
@@ -31,6 +32,24 @@ namespace ServiceA.Controllers.v1
             _dbContext = dBContext;
             _repositoryHos = new Repository<HospitalInfo>(dBContext);
             _unitOfWork = unitOfWork;
+        }
+
+        [HttpGet("redistest")]
+        public object RedisTest()
+        {
+            object result = null;
+            using (var redis = RedisUtil.Instance.GetRedis())
+            {
+                redis.GetDatabase(1).Set(new { name = "张三", age = 18 }, TimeSpan.FromSeconds(160), "hkey");
+                result = redis.GetDatabase(1).Get<person>("hkey");
+            }
+            return result;
+        }
+
+        public class person
+        {
+            public string name { get; set; }
+            public string age { get; set; }
         }
         /// <summary>
         /// 正常接口调用测试
