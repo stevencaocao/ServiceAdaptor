@@ -3,7 +3,7 @@ using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-namespace MSCore.Util.Redis.Extensions
+namespace MSCore.Util.Redis
 {
     /// <summary>
     /// 
