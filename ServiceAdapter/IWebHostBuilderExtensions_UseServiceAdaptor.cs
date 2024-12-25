@@ -46,7 +46,7 @@ namespace ServiceAdapter
         public static IWebHostBuilder UseServiceAdaptor(this IWebHostBuilder builder, IConfiguration configuration)
         {
             int serviceCenter = 1;//当前使用的服务中心1：consul 2:nacos
-            ServiceCenter config=configuration.GetSection("servicecenter").Get<ServiceCenter>();
+            ServiceCenter config = configuration.GetSection("servicecenter").Get<ServiceCenter>();
 
             builder.ConfigureServices(delegate (IServiceCollection services)
             {
@@ -83,7 +83,7 @@ namespace ServiceAdapter
                             var registration = new AgentServiceRegistration()
                             {
                                 ID = consulConfig.ServiceId, //"service-" + Guid.NewGuid(),//唯一ID
-                                Name = consulConfig.GroupName,//组名称
+                                Name = consulConfig.ServiceName,//组名称
                                 Address = consulConfig.ServiceHost,//提供服务IP地址
                                 Port = consulConfig.ServicePort,//实例端口
                                 Tags = consulConfig.Tags.Split(','),//标签
@@ -147,9 +147,9 @@ namespace ServiceAdapter
                         break;
                     case 2:
                         #region 注册到nacos
-                       
+
                         services.Configure<NacosConfig>(configuration.GetSection("servicecenter:nacos"));
-                        services.AddNacosV2Naming(configuration,null,"servicecenter:nacos");
+                        services.AddNacosV2Naming(configuration, null, "servicecenter:nacos");
 
                         services.AddHostedService<RegSvcBgTask>();
 

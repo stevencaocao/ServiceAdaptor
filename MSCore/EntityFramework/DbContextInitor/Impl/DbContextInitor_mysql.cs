@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MSCore.EntityFramework.Model;
+using System;
 
 namespace MSCore.EntityFramework.DbContextInitor
 {

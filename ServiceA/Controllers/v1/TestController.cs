@@ -9,6 +9,7 @@ using ServiceA.ServiceProvider.Contract;
 using MSCore.Util.ConfigurationManager;
 using ServiceA.BASE;
 using MSCore.Util.Redis;
+using MSCore.Util.Logger.Attribute;
 
 namespace ServiceA.Controllers.v1
 {
@@ -32,6 +33,12 @@ namespace ServiceA.Controllers.v1
             _dbContext = dBContext;
             _repositoryHos = new Repository<HospitalInfo>(dBContext);
             _unitOfWork = unitOfWork;
+        }
+        [HttpGet("test1111")]
+        [OpLog(BelongFun = "测试方法", BelongModule = "测试模块", BelongWindow = "", OperateContent = "这是一个测试")]
+        public object Test111()
+        {
+            return "aaaaa";
         }
 
         [HttpGet("redistest")]

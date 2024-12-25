@@ -12,9 +12,9 @@ namespace MSCore.EntityFramework.Entity
         /// 更新时间
         /// </summary>
         public virtual DateTime UpdateTime { get; set; }
-        /// <summary>
-        /// 是否删除
-        /// </summary>
-        public virtual bool IsDelete { get; set; }
+        ///// <summary>
+        ///// 是否删除
+        ///// </summary>
+        //public virtual bool IsDelete { get; set; }
     }
 }

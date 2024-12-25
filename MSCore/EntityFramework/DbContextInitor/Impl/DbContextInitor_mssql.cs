@@ -10,17 +10,17 @@ namespace MSCore.EntityFramework.DbContextInitor
         {
             //使用SqlServer数据库
 
-            //#if NETSTANDARD2_0
+#if NETSTANDARD2_0
             ////注：UseRowNumberForPaging 为了解决sql server 2008不支持 FETCH和NETX语句（Linq分页）的问题（sql server2012才支持）
             data.AddDbContext<TContext>(opt => opt.UseSqlServer(info.ConnectionString, b => b.UseRowNumberForPaging()));
-            //#endif
+#endif
 
-            //#if NETSTANDARD2_1
-            //                           data.AddDbContext<TContext>(opt => opt.UseSqlServer(info.ConnectionString));
-            //#endif
-            //#if NET6_0
-            //            data.AddDbContext<TContext>(opt => opt.UseSqlServer(info.ConnectionString));
-            //#endif
+#if NETSTANDARD2_1
+                                       data.AddDbContext<TContext>(opt => opt.UseSqlServer(info.ConnectionString));
+#endif
+#if NET6_0
+                        data.AddDbContext<TContext>(opt => opt.UseSqlServer(info.ConnectionString));
+#endif
 
         }
 

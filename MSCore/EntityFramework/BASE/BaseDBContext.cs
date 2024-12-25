@@ -47,7 +47,7 @@ namespace MSCore.EntityFramework
                 if (entity.State == EntityState.Added)
                 {
                     ((BaseEntity)entity.Entity).CreateTime = DateTime.Now;
-                    ((BaseEntity)entity.Entity).IsDelete = false;
+                    //((BaseEntity)entity.Entity).IsDelete = false;
                 }
 
                 ((BaseEntity)entity.Entity).UpdateTime = DateTime.Now;
